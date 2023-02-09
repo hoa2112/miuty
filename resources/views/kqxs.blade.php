@@ -1,0 +1,1 @@
+<script language="javascript" >tb_kqxs168_w="custom";custom_168_area="Miền Bắc"; custom_168_width="85%";custom_168_font="15px";custom_168_bgcolor="#CC0000";custom_168_bgtitle="#FFFFFF";custom_168_bgdb="#CC0000"; </script><script language="javascript" src="https://168xoso.com/ma-nhung-ket-qua"></script><div id="kqxs168"></div>
