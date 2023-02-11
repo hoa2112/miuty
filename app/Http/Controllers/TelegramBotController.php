@@ -33,6 +33,11 @@ class TelegramBotController extends Controller
             $this->sendNow($mess);
         }
 
+        if (strpos($text, '/help') !== false) {
+            $this->showCommand($text);
+        }
+
+
         if (strpos($text, '/add') !== false) {
             $this->addNewMember($text);
         }
@@ -45,9 +50,25 @@ class TelegramBotController extends Controller
             $this->booked($text);
         }
 
+        if (strpos($text, '/unbooked') !== false) {
+            $this->unbooked($text);
+        }
+
         if (strpos($text, '/rm') !== false) {
             $this->removeMember($text);
         }
+    }
+
+    public function showCommand($text)
+    {
+        $html = '• Tổng hợp các lệnh Miu Ty:'. "\r\n". "\r\n";
+        $html .= "<b>hey miu ty</b> => Gọi cho vui" . "\r\n";
+        $html .= "<b>/ll</b> => Hiển thị danh sách member" . "\r\n";
+        $html .= "<b>/add | name | user name</b> => Thêm mới member" . "\r\n";
+        $html .= "<b>/rm username</b> => Xóa member" . "\r\n";
+        $html .= "<b>/booked username</b> => update member đã mời trà sữa" . "\r\n";
+
+        $this->sendNow($html);
     }
 
     public function addNewMember($text)
@@ -95,7 +116,7 @@ class TelegramBotController extends Controller
         if (!empty($exits)) {
             DB::table('list_invite_tea')
                 ->where('username', $username)
-                ->update(['status' => 0]);
+                ->delete();
 
             $mess = 'Tạm biệt ' . "<b>$username</b>" . ' hãy luôn tươi cười nha ♥';
             $this->sendNow($mess);
@@ -174,25 +195,69 @@ class TelegramBotController extends Controller
         }
     }
 
+    public function unbooked($text)
+    {
+        $username = trim(substr($text, 9));
+        if (!empty($username)) {
+            $exits = DB::table('list_invite_tea')
+                ->where('username', $username)
+                ->first();
+
+            DB::table('list_invite_tea')
+                ->where([
+                    ['username', $username],
+                ])
+                ->update(['booked' => 0]);
+
+            $html = 'Đã hoàn thao tác '. $username .' mua đồ hôm nay'. "\r\n". "\r\n";
+            $this->sendNow($html);
+        }
+    }
+
     public function booked($text)
     {
         $username = trim(substr($text, 7));
 
         if (!empty($username)) {
-            DB::table('list_invite_tea')
-                ->where([
-                    ['username', $username],
-                ])
-                ->update(['booked' => 1]);
+            $exits = DB::table('list_invite_tea')
+                ->where('username', $username)
+                ->first();
 
-            DB::table('general_history')->insert([
-                'status' => 1,
-                'week' => (int)date('W'),
-                'month' => (int)date('m'),
-            ]);
+            if(!empty($exits)) {
+                DB::table('list_invite_tea')
+                    ->where([
+                        ['username', $username],
+                    ])
+                    ->update(['booked' => 1]);
 
-            $html = 'Cảm ơn '. $username .' đã bổ sung vitamin cho team ♥♥'. "\r\n". "\r\n";
-            $this->sendNow($html);
+                DB::table('general_history')->insert([
+                    'status' => 1,
+                    'type' => 1,
+                    'week' => (int)date('W'),
+                    'month' => (int)date('m'),
+                ]);
+
+                $html = 'Cảm ơn '. $username .' đã bổ sung vitamin cho team ♥♥'. "\r\n". "\r\n";
+                $this->sendNow($html);
+
+                $last = DB::table('list_invite_tea')
+                    ->where([
+                        ['booked', 0],
+                        ['status', 1],
+                    ])
+                    ->first();
+
+                if(empty($last)) {
+                    DB::table('list_invite_tea')
+                        ->update(['booked' => 0]);
+
+                    $html = 'Tất cả member đã mua, reset lại thôi'. "\r\n". "\r\n";
+                    $this->sendNow($html);
+                }
+            } else {
+                $html = 'user name '. $username .' không tồn tại'. "\r\n". "\r\n";
+                $this->sendNow($html);
+            }
         }
     }
 
@@ -233,6 +298,7 @@ class TelegramBotController extends Controller
     {
         DB::table('general_history')->insert([
             'status' => 1,
+            'type' => 2,
             'week' => (int)date('W'),
             'month' => (int)date('m'),
         ]);
