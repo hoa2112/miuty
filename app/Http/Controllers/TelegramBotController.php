@@ -7,25 +7,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Illuminate\Support\Facades\Log;
 
 class TelegramBotController extends Controller
 {
     public $chat_id_test;
     public $chat_id;
+    public $token;
 
     public function __construct()
     {
-        $this->chat_id_test = '-892516421';
-//        $this->chat_id_main = '-1001819101421';
-        $this->chat_id = $this->chat_id_test;
+        // $this->chat_id_test = '-892516421';
+        $this->chat_id_main = '-1001819101421';
+        $this->chat_id = $this->chat_id_main;
+        $this->token = '6094443316:AAGBV34HsdDDgk1nRreI45TKm2i9pPSz26I';
     }
 
     public function index()
     {
-        $activity = Telegram::getUpdates();
-        $list = end($activity);
-
-        $text = $list->message->text;
+        $telegram = new \App\Libs\Telegram($this->token);
+        $text = $telegram->Text();
 
         if (strpos($text, 'hey miu ty') !== false || strpos($text, 'hey Miu Ty') !== false) {
             $mess = 'Dạ em nghe ^^';
@@ -42,6 +43,10 @@ class TelegramBotController extends Controller
 
         if (strpos($text, '/booked') !== false) {
             $this->booked($text);
+        }
+
+        if (strpos($text, '/rm') !== false) {
+            $this->removeMember($text);
         }
     }
 
@@ -79,6 +84,27 @@ class TelegramBotController extends Controller
         }
     }
 
+    public function removeMember($text)
+    {
+        $username = trim(substr($text, 3));
+
+        $exits = DB::table('list_invite_tea')
+            ->where('username', $username)
+            ->first();
+
+        if (!empty($exits)) {
+            DB::table('list_invite_tea')
+                ->where('username', $username)
+                ->update(['status' => 0]);
+
+            $mess = 'Tạm biệt ' . "<b>$username</b>" . ' hãy luôn tươi cười nha ♥';
+            $this->sendNow($mess);
+        } else {
+            $mess = 'username ' . "<b>$username</b>" . ' không tồn tại, vui lòng kiểm tra lại';
+            $this->sendNow($mess);
+        }
+    }
+
     public function listEmployee()
     {
         $list = DB::table('list_invite_tea')
@@ -100,7 +126,7 @@ class TelegramBotController extends Controller
 
         foreach ($list as $key => $value) {
             $booked = $value->booked == 1 ? '( Đã mua )' : ($value->id == $next->id ? '( Sắp tới lượt )' : '');
-            $html .= $key + 1 .'.'. $value->name . "<b> $booked</b>" . "\n\r";
+            $html .= $key + 1 .'.'. $value->name ."( $value->username )" . "<b> $booked</b>" . "\n\r";
         }
 
         $this->sendNow($html);

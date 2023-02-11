@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 // GET
-
+Route::any('bot/{botname}', 'TelegramBotController@index')->name('bot.webhook');
 Route::get('/autoSend', 'TelegramBotController@index')->name('tele.autoSend');
 Route::get('/listEmployee', 'TelegramBotController@listEmployee');
 Route::get('/contact', 'TelegramBotController@contactForm');
