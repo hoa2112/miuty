@@ -17,7 +17,7 @@ class TelegramBotController extends Controller
 
     public function __construct()
     {
-        // $this->chat_id_test = '-892516421';
+        $this->chat_id_test = '-892516421';
         $this->chat_id_main = '-1001819101421';
         $this->chat_id = $this->chat_id_main;
         $this->token = '6094443316:AAGBV34HsdDDgk1nRreI45TKm2i9pPSz26I';
@@ -25,6 +25,7 @@ class TelegramBotController extends Controller
 
     public function index()
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $telegram = new \App\Libs\Telegram($this->token);
         $text = $telegram->Text();
 
@@ -73,6 +74,7 @@ class TelegramBotController extends Controller
 
     public function addNewMember($text)
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $name = trim(substr(substr($text, 4), 0, strpos(substr($text, 4), '|')));
         $username = trim(substr($text, strpos($text, '|') + 1));
 
@@ -107,6 +109,7 @@ class TelegramBotController extends Controller
 
     public function removeMember($text)
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $username = trim(substr($text, 3));
 
         $exits = DB::table('list_invite_tea')
@@ -128,6 +131,7 @@ class TelegramBotController extends Controller
 
     public function listEmployee()
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $list = DB::table('list_invite_tea')
             ->where([
                 ['status', 1],
@@ -155,6 +159,7 @@ class TelegramBotController extends Controller
 
     public function bookFood()
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $list = DB::table('list_invite_tea')
             ->where([
                 ['status', 1],
@@ -197,6 +202,7 @@ class TelegramBotController extends Controller
 
     public function unbooked($text)
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $username = trim(substr($text, 9));
         if (!empty($username)) {
             $exits = DB::table('list_invite_tea')
@@ -216,6 +222,7 @@ class TelegramBotController extends Controller
 
     public function booked($text)
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $username = trim(substr($text, 7));
 
         if (!empty($username)) {
@@ -263,6 +270,7 @@ class TelegramBotController extends Controller
 
     public function kickOff()
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $month = (int)date('m');
         $day = (int)date('N');
         $day_of_month = date('j');
@@ -296,6 +304,7 @@ class TelegramBotController extends Controller
 
     public function wasKickOff($text)
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         DB::table('general_history')->insert([
             'status' => 1,
             'type' => 2,
@@ -309,11 +318,13 @@ class TelegramBotController extends Controller
 
     public function contactForm()
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         return view('contactForm');
     }
 
     public function storeMessage(Request $request)
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         $request->validate([
             'message' => 'required'
         ]);
@@ -331,6 +342,7 @@ class TelegramBotController extends Controller
 
     public function sendNow($mess)
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         Telegram::sendMessage([
             'chat_id' => $this->chat_id,
             'parse_mode' => 'HTML',
