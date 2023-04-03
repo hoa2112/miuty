@@ -38,7 +38,6 @@ class TelegramBotController extends Controller
             $this->showCommand($text);
         }
 
-
         if (strpos($text, '/add') !== false) {
             $this->addNewMember($text);
         }
@@ -55,6 +54,10 @@ class TelegramBotController extends Controller
             $this->unbooked($text);
         }
 
+        if (strpos($text, '/kickoffed') !== false) {
+            $this->wasKickOff($text);
+        }
+
         if (strpos($text, '/rm') !== false) {
             $this->removeMember($text);
         }
@@ -68,6 +71,7 @@ class TelegramBotController extends Controller
         $html .= "<b>/add | name | user name</b> => Thêm mới member" . "\r\n";
         $html .= "<b>/rm username</b> => Xóa member" . "\r\n";
         $html .= "<b>/booked username</b> => update member đã mời trà sữa" . "\r\n";
+        $html .= "<b>/kickoffed </b> => update ngày đã liên hoan của quý" . "\r\n";
 
         $this->sendNow($html);
     }
