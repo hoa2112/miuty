@@ -279,7 +279,12 @@ class TelegramBotController extends Controller
         $day = (int)date('N');
         $day_of_month = date('j');
 
-        if($day_of_month >= 7 && in_array($day, [2,3,4,5]) && ($month == 1 || $month == 4 || $month == 7 || $month == 10)) {
+        $check_kickoffed = DB::table('general_history')->where([
+            ['type', 2],
+            ['month', $month],
+        ])->exists();
+
+        if($day_of_month <= 7 && in_array($day, [2,3,4,5]) && in_array($month, [1, 4, 7, 10]) && in_array($month, [1, 4, 7, 10]) && $check_kickoffed == false) {
             switch($day) {
                 case 1:
                     $day_vi = 'Thứ Hai';
@@ -299,7 +304,7 @@ class TelegramBotController extends Controller
             }
 
             $html = '• Theo quy luật lối sống lành mạnh của team:'. "\r\n". "\r\n";
-            $html .= "<b>Hôm nay là '.$day_vi.' của đầu tiên trong quý này, nhậu thôi, nhậu thôi ♥♥</b>" . "\r\n". "\r\n";
+            $html .= "<b>Hôm nay là $day_vi đầu tiên của quý này, nhậu thôi, nhậu thôi ♥♥</b>" . "\r\n". "\r\n";
             $html .= '☺☺ Hãy Cho tôi thấy cánh tay của các bạn ☺☺'. "\r\n";
 
             $this->sendNow($html);
