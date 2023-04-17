@@ -192,7 +192,7 @@ class TelegramBotController extends Controller
 
         $day = date('l');
 
-        if (!empty($list) && $day == 'Monday' && $ting === true) {
+        if (!empty($list) && $day == 'Tuesday' && $ting === true) {
             $html = '• Theo quy luật lối sống lành mạnh của team:'. "\r\n". "\r\n";
             $html .= "<b>2 tuần 1 bữa bổ sung vitamin C.</b>" . "\r\n";
             $html .= '------------------------'. "\r\n";
