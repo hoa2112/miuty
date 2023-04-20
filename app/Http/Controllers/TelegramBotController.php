@@ -13,6 +13,7 @@ class TelegramBotController extends Controller
 {
     public $chat_id_test;
     public $chat_id;
+    public $chat_id_request;
     public $chat_runner;
     public $token;
 
@@ -32,6 +33,7 @@ class TelegramBotController extends Controller
         $telegram = new \App\Libs\Telegram($this->token);
 
         $text = $telegram->Text();
+        $this->chat_id_request = $telegram->ChatID();
 
         if (strpos($text, 'hey miu ty') !== false || strpos($text, 'hey Miu Ty') !== false) {
             $mess = 'Dạ em nghe ^^';
@@ -335,12 +337,6 @@ class TelegramBotController extends Controller
         return view('contactForm');
     }
 
-    public function contactFormRunner()
-    {
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-        return view('contactFormRunner');
-    }
-
     public function storeMessage(Request $request)
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
@@ -349,27 +345,10 @@ class TelegramBotController extends Controller
         ]);
 
         $mess = $request->message;
+        $chat_id = $request->index_group == 3 ? $this->chat_id : ($request->index_group == 2 ? $this->chat_runner : $this->chat_id_test);
 
         Telegram::sendMessage([
-            'chat_id' => $this->chat_id,
-            'parse_mode' => 'HTML',
-            'text' => $mess
-        ]);
-
-        return redirect()->back();
-    }
-
-    public function storeMessageRunner(Request $request)
-    {
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $request->validate([
-            'message' => 'required'
-        ]);
-
-        $mess = $request->message;
-
-        Telegram::sendMessage([
-            'chat_id' => $this->chat_runner,
+            'chat_id' => $chat_id,
             'parse_mode' => 'HTML',
             'text' => $mess
         ]);
@@ -381,7 +360,7 @@ class TelegramBotController extends Controller
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         Telegram::sendMessage([
-            'chat_id' => $this->chat_id,
+            'chat_id' => $this->chat_id_request,
             'parse_mode' => 'HTML',
             'text' => $mess
         ]);
