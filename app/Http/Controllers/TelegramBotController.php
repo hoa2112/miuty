@@ -13,12 +13,15 @@ class TelegramBotController extends Controller
 {
     public $chat_id_test;
     public $chat_id;
+    public $chat_runner;
     public $token;
 
     public function __construct()
     {
         $this->chat_id_test = '-892516421';
         $this->chat_id_main = '-1001819101421';
+        $this->chat_runner = '-911651755';
+
         $this->chat_id = $this->chat_id_main;
         $this->token = '6094443316:AAGBV34HsdDDgk1nRreI45TKm2i9pPSz26I';
     }
@@ -27,6 +30,7 @@ class TelegramBotController extends Controller
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $telegram = new \App\Libs\Telegram($this->token);
+
         $text = $telegram->Text();
 
         if (strpos($text, 'hey miu ty') !== false || strpos($text, 'hey Miu Ty') !== false) {
@@ -331,6 +335,12 @@ class TelegramBotController extends Controller
         return view('contactForm');
     }
 
+    public function contactFormRunner()
+    {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        return view('contactFormRunner');
+    }
+
     public function storeMessage(Request $request)
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
@@ -342,6 +352,24 @@ class TelegramBotController extends Controller
 
         Telegram::sendMessage([
             'chat_id' => $this->chat_id,
+            'parse_mode' => 'HTML',
+            'text' => $mess
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function storeMessageRunner(Request $request)
+    {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $request->validate([
+            'message' => 'required'
+        ]);
+
+        $mess = $request->message;
+
+        Telegram::sendMessage([
+            'chat_id' => $this->chat_runner,
             'parse_mode' => 'HTML',
             'text' => $mess
         ]);

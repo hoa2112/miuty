@@ -15,17 +15,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// GET
+// Auto
 Route::any('bot/{botname}', 'TelegramBotController@index')->name('bot.webhook');
 Route::get('/autoSend', 'TelegramBotController@index')->name('tele.autoSend');
 Route::get('/listEmployee', 'TelegramBotController@listEmployee');
-Route::get('/contact', 'TelegramBotController@contactForm');
 Route::get('/bookFood', 'TelegramBotController@bookFood');
 Route::get('/kickOff', 'TelegramBotController@kickOff');
 Route::get('/updated-activity', 'TelegramBotController@updatedActivity');
 
+
+// Custom
+Route::get('/contact', 'TelegramBotController@contactForm');
+Route::get('/contact-runner', 'TelegramBotController@contactFormRunner');
+
 // POST
 Route::post('/send-message', 'TelegramBotController@storeMessage');
+Route::post('/send-message-runner', 'TelegramBotController@storeMessageRunner');
 
 // CACHE
 Route::get('/clear-cache', function() {
