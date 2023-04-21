@@ -81,4 +81,24 @@ class TelegramBotController extends Controller
             'text' => $mess
         ]);
     }
+
+    public function bookFood()
+    {
+        MiuTy::bookFood();
+    }
+
+    public function listEmployee()
+    {
+        MiuTy::listEmployee();
+    }
+
+    public function registerRun()
+    {
+        Runner::registerRun();
+    }
+
+    public function kickOff()
+    {
+        MiuTy::kickOff();
+    }
 }
