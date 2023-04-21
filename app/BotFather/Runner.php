@@ -32,10 +32,10 @@ class Runner
         $day = ($deadline - $today) / 86400;
 
         if ($day > 0) {
-            $html = 'Trời ơi, chỉ còn '. $day . ' nữa là hết hạn đăng ký giải chay VP rồi, đăng ký đi thôi nào !';
+            $html = 'Trời ơi, chỉ còn '. $day . ' ngày nữa là hết hạn đăng ký giải chạy VP rồi, đăng ký đi thôi nào !';
             self::sendNow($html);
         } elseif($day == 0) {
-            $html = 'Hôm nay là hạn cuối đăng ký giải chay VP rồi, đăng ký nhanh nhanh nào';
+            $html = 'Hôm nay là hạn cuối đăng ký giải chạy VP rồi, đăng ký nhanh nhanh nào';
             self::sendNow($html);
         }
     }
