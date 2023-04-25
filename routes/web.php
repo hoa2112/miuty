@@ -34,6 +34,10 @@ Route::get('/kickOff', 'TelegramBotController@kickOff');
 Route::get('/registerRun', 'TelegramBotController@registerRun');
 
 
+// Movie
+Route::get('/showTimes', 'TelegramBotController@showTimes');
+
+
 // CACHE
 Route::get('/clear-cache', function() {
     $exitCode = \Illuminate\Support\Facades\Artisan::call('cache:clear');
